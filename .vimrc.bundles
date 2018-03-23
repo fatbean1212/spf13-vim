@@ -63,7 +63,7 @@
     " list only the plugin groups you will use
     if !exists('g:spf13_bundle_groups')
         "let g:spf13_bundle_groups=['general', 'writing', 'neocomplete', 'programming', 'php', 'ruby', 'python', 'javascript', 'misc','markdown' ]
-        let g:spf13_bundle_groups=['general', 'neocomplete', 'python', 'markdown' ]
+        let g:spf13_bundle_groups=['general', 'neocomplete', 'python', 'markdown' ,'programming']
     endif
 
     " To override all the included bundles, add the following to your
@@ -124,17 +124,17 @@
     " General Programming {
         if count(g:spf13_bundle_groups, 'programming')
             " Pick one of the checksyntax, jslint, or syntastic
-            Plugin 'scrooloose/syntastic'
+            "Plugin 'scrooloose/syntastic'
             Plugin 'tpope/vim-fugitive'
-            Plugin 'mattn/webapi-vim'
-            Plugin 'mattn/gist-vim'
-            Plugin 'scrooloose/nerdcommenter'
-            Plugin 'tpope/vim-commentary'
-            Plugin 'godlygeek/tabular'
-            Plugin 'luochen1990/rainbow'
-            if executable('ctags')
-                Plugin 'majutsushi/tagbar'
-            endif
+            "Plugin 'mattn/webapi-vim'
+            "Plugin 'mattn/gist-vim'
+            "Plugin 'scrooloose/nerdcommenter'
+            "Plugin 'tpope/vim-commentary'
+            "Plugin 'godlygeek/tabular'
+            "Plugin 'luochen1990/rainbow'
+            "if executable('ctags')
+            "    Plugin 'majutsushi/tagbar'
+            "endif
         endif
     " }
 
