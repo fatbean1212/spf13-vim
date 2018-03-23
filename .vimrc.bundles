@@ -118,6 +118,7 @@
         if count(g:spf13_bundle_groups, 'markdown')
             Plugin 'iamcco/mathjax-support-for-mkdp'
             Plugin 'iamcco/markdown-preview.vim'
+        endif
     " }
 
     " General Programming {
@@ -156,11 +157,11 @@
             Plugin 'honza/vim-snippets'
         elseif count(g:spf13_bundle_groups, 'neocomplete')
 			if has('nvim')
-			  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+			  Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 			else
-			  Plug 'Shougo/deoplete.nvim'
-			  Plug 'roxma/nvim-yarp'
-			  Plug 'roxma/vim-hug-neovim-rpc'
+			  Plugin 'Shougo/deoplete.nvim'
+			  Plugin 'roxma/nvim-yarp'
+			  Plugin 'roxma/vim-hug-neovim-rpc'
 			endif
             "Plugin 'Shougo/neocomplete.vim.git'
             "Plugin 'Shougo/neosnippet'
