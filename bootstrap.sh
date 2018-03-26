@@ -15,13 +15,13 @@
 #   limitations under the License.
 
 ############################  SETUP PARAMETERS
-app_name='spf13-vim'
+app_name='my-vim'
 [ -z "$APP_PATH" ] && APP_PATH="$HOME/Documents/inworkspace/spf13-vim"
 [ -z "$REPO_URI" ] && REPO_URI='https://github.com:fatbean1212/spf13-vim.git'
 [ -z "$REPO_BRANCH" ] && REPO_BRANCH='rob'
 debug_mode='0'
 fork_maintainer='0'
-[ -z "$VUNDLE_URI" ] && VUNDLE_URI="https://github.com/VundleVim/Vundle.vim"
+[ -z "$VUNDLE_URI" ] && VUNDLE_URI="https://github.com/junegunn/vim-plug"
 
 ############################  BASIC SETUP TOOLS
 msg() {
@@ -87,7 +87,12 @@ do_backup() {
         msg "Attempting to back up your original vim configuration."
         today=`date +%Y%m%d_%s`
         for i in "$1" "$2" "$3"; do
-            [ -e "$i" ] && [ ! -L "$i" ] && mv -v "$i" "$i.$today";
+            if [ "$HOME/.vim" = "$i" ]
+            then
+                [ -e "$i" ] && [ ! -L "$i" ] && mkdir "$i.$today" && mv -v "$i/plugged" "$i.$today/plugged";
+            else
+                [ -e "$i" ] && [ ! -L "$i" ] && mv -v "$i" "$i.$today";
+            fi
         done
         ret="$?"
         success "Your original vim configuration has been backed up."
@@ -164,8 +169,8 @@ setup_vundle() {
     vim \
         -u "$1" \
         "+set nomore" \
-        "+PluginInstall!" \
-        "+PluginClean" \
+        "+PlugInstall!" \
+        "+PlugClean" \
         "+qall"
 
     export SHELL="$system_shell"
@@ -180,8 +185,7 @@ program_must_exist "vim"
 program_must_exist "git"
 
 do_backup       "$HOME/.vim" \
-                "$HOME/.vimrc" \
-                "$HOME/.gvimrc"
+                "$HOME/.vimrc" 
 
 #####sync_repo       "$APP_PATH" \
                 ####"$REPO_URI" \
@@ -191,14 +195,10 @@ do_backup       "$HOME/.vim" \
 create_symlinks "$APP_PATH" \
                 "$HOME"
 
-####setup_fork_mode "$fork_maintainer" \
-####                "$APP_PATH" \
-####                "$HOME"
-
-sync_repo       "$HOME/.vim/bundle/Vundle.vim" \
+sync_repo       "$HOME/.vim/autoload" \
                 "$VUNDLE_URI" \
                 "master" \
-                "vundle"
+                "vim-plug"
 
 setup_vundle    "$APP_PATH/.vimrc.bundles.default"
 
