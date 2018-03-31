@@ -100,24 +100,15 @@ do_backup() {
    fi
 }
 
-sync_repo() {
+sync_plug() {
     local repo_path="$1"
-    local repo_uri="$2"
-    local repo_branch="$3"
-    local repo_name="$4"
 
-    msg "Trying to update $repo_name"
-
-    if [ ! -e "$repo_path" ]; then
-        mkdir -p "$repo_path"
-        git clone -b "$repo_branch" "$repo_uri" "$repo_path"
-        ret="$?"
-        success "Successfully cloned $repo_name."
-    else
-        cd "$repo_path" && git pull origin "$repo_branch"
-        ret="$?"
-        success "Successfully updated $repo_name"
-    fi
+    msg "Trying to upgrade plug vim"
+    mkdir -p "$repo_path"
+    curl -fLo $repo_path/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    ret="$?"
+    success "Successfully cloned plug vim."
 
     debug
 }
@@ -129,42 +120,15 @@ create_symlinks() {
     lnif "$source_path/.vimrc"         "$target_path/.vimrc"
     lnif "$source_path/.vimrc.bundles" "$target_path/.vimrc.bundles"
     lnif "$source_path/.vimrc.before"  "$target_path/.vimrc.before"
-    lnif "$source_path/.vim"           "$target_path/.vim"
-
-    if program_exists "nvim"; then
-        lnif "$source_path/.vim"       "$target_path/.config/nvim"
-        lnif "$source_path/.vimrc"     "$target_path/.config/nvim/init.vim"
-    fi
-
-    touch  "$target_path/.vimrc.local"
 
     ret="$?"
     success "Setting up vim symlinks."
     debug
 }
 
-setup_fork_mode() {
-    local source_path="$2"
-    local target_path="$3"
-
-    if [ "$1" -eq '1' ]; then
-        touch "$target_path/.vimrc.fork"
-        touch "$target_path/.vimrc.bundles.fork"
-        touch "$target_path/.vimrc.before.fork"
-
-        lnif "$source_path/.vimrc.fork"         "$target_path/.vimrc.fork"
-        lnif "$source_path/.vimrc.bundles.fork" "$target_path/.vimrc.bundles.fork"
-        lnif "$source_path/.vimrc.before.fork"  "$target_path/.vimrc.before.fork"
-
-        ret="$?"
-        success "Created fork maintainer files."
-        debug
-    fi
-}
-
 setup_vundle() {
     local system_shell="$SHELL"
-    export SHELL='/bin/sh'
+    export SHELL='/bin/zsh'
 
     vim \
         -u "$1" \
@@ -184,21 +148,12 @@ variable_set "$HOME"
 program_must_exist "vim"
 program_must_exist "git"
 
-do_backup       "$HOME/.vim" \
-                "$HOME/.vimrc" 
-
-#####sync_repo       "$APP_PATH" \
-                ####"$REPO_URI" \
-                ####"$REPO_BRANCH" \
-                ####"$app_name"
+do_backup       "$HOME/.vimrc"
 
 create_symlinks "$APP_PATH" \
                 "$HOME"
 
-sync_repo       "$HOME/.vim/autoload" \
-                "$VUNDLE_URI" \
-                "master" \
-                "vim-plug"
+sync_plug       "$HOME/.vim/autoload" 
 
 setup_vundle    "$APP_PATH/.vimrc.bundles.default"
 
